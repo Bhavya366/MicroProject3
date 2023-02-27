@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Document</title>
+</head>
+<!-- oninput="this.value = Math.abs(this.value) -->
+
+<body>
+    <center>
+        <div class="container">
+                <div class="time">
+                    <div>
+                        <input type="number" id="hr" value="00" min="0" max="24" oninput="this.value = Math.abs(this.value)" />&nbsp;:
+                        <div>Hrs</div>
+                    </div>
+                    <div>
+                        &nbsp;<input type="number" id="min" value="00" min="0" max="59" oninput="this.value = Math.abs(this.value)" />&nbsp;:
+                        <div>Min</div>
+                    </div>
+                    <div>
+                        &nbsp;<input type="number" id="sec" value="00" min="0" max="59" oninput="this.value = Math.abs(this.value)" />
+                        <div>Sec</div>
+                    </div>
+                </div><br><br>
+                <div>
+                <div class="timer" id="timer">00:00:00</div><br><br>
+                <button id="start">Start</button>&nbsp;
+                <button id="reset">Reset</button>
+            </div>
+        </div>
+    </center>
+    <div class="modal" id='modal' style="visibility: hidden;">
+        <div class="modal-content">
+            <p>Time's Up...!!!</p>
+            <audio src="audio.wav" id="play"></audio>
+        </div>
+    </div>
+    <script>
+        document.getElementById('start').addEventListener('click',startTime);
+        document.getElementById('reset').addEventListener('click',resetTime)
+        let interval = null;
+        function startTime(){
+            const hr=Number(document.getElementById('hr').value);
+            const min=parseInt(document.getElementById('min').value);
+            const sec=Number(document.getElementById('sec').value);
+            var total = hr*3600 + min*60 + sec;
+            if(total<=0)
+                alert("Enter correct time");
+            interval = setInterval(()=>{
+                const leftHr=Math.floor(total/3600);
+                const leftMin=Math.floor((total%3600)/60)
+                const leftSec=total%60;
+                document.getElementById('timer').innerHTML=`${leftHr.toString()}:${leftMin.toString()}:${leftSec.toString()}`;
+                if(total<=0){
+                    clearInterval(interval);
+                    document.getElementById('modal').style.visibility="visible";
+                    document.getElementById('play').play();
+                }else
+                    total--;
+            },1000)
+        }
+        function resetTime(){
+            clearInterval(interval);
+            document.getElementById('timer').innerHTML="00:00:00"
+        }
+    </script>
+</body>
+</html>
